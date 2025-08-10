@@ -5,14 +5,18 @@ import { gql } from "graphql-tag";
 import { getBlogs } from "./resolvers/blog";
 import { getBlogById } from "./resolvers/blog";
 // import { getBlogById } from "./resolvers/blog";
+import { prisma } from "../../../../prisma/client";
 
 const typeDefs = gql`
   type Query {
     hello12: String
     rathi: String
     helloArray: [String]
-    blog(index: String): Blog
-    BlogArr(q:String): [Blog]       #for multiple filter add more using comma (q:String,ms:number")
+    blog(index: String!): Blog
+    BlogArr(q: String): [Blog] #for multiple filter add more using comma (q:String,ms:number")
+  }
+  type Mutation {
+    createBlog(title: String!, content: String!, imgUrl: String!): Boolean!
   }
   type Blog {
     id: String
@@ -28,7 +32,24 @@ const resolvers = {
     // rathi: () => "Tanishq Rathi here this side!!",
     // helloArray: () => ["Item1", "Item2", "Item3", "Item4"],
     blog: getBlogById,
-    BlogArr: getBlogs
+    BlogArr: getBlogs,
+  },
+  Mutation: {
+    createBlog: async (x: any, args: any) => {
+      const blogDataSave = {
+        title: args.title,
+        content: args.content,
+        imgUrl: args.imgUrl,
+      };
+      try {
+        await prisma.blog.create({
+          data: blogDataSave,
+        });
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
   },
 };
 

@@ -43,6 +43,13 @@ export default async function Home() {
           Search
         </button>
       </form>
+      <div className="flex justify-end mb-6 px-4">
+        <Link href="/createBlog">
+          <button className="bg-green-600 cursor-pointer text-white px-6 py-2 rounded shadow hover:bg-green-700 transition font-semibold">
+            Create Blog
+          </button>
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
         {blogs.length > 0 ? (
           blogs.map((item: Blog) => (
