@@ -6,7 +6,12 @@ const gqlClient = new GraphQLClient("http://localhost:3000/api/graphql");
 
 const POST_BLOG = gql`
     mutation Mutation($title: String!, $content: String!, $imgUrl: String!) {
-        createBlog(title: $title, content: $content, imgUrl: $imgUrl)
+        createBlog(title: $title, content: $content, imgUrl: $imgUrl){
+            id
+            title
+            content
+            imgUrl
+        }
     }
 `;
 
@@ -20,6 +25,12 @@ const page = () => {
         try {
            const blog =  await gqlClient.request(POST_BLOG, { title, content, imgUrl });
            console.log(blog)
+           if(blog) {
+               alert("Blog created successfully!");
+               setTitle("");
+               setContent("");
+               setImgUrl("");
+           }
         } catch (error) {
             console.log(error)
         }
@@ -28,7 +39,7 @@ const page = () => {
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4 text-black text-center">Add a new Blog</h1>
-            <form onSubmit={handleSubmit} className="text-black flex flex-col">
+            <form onSubmit={handleSubmit} className="text-black flex flex-col items-start px-10 border-2 border-gray-300 rounded-lg p-4">
                 <label htmlFor="title">Title:</label>
                 <input
                     type="text"
@@ -52,7 +63,7 @@ const page = () => {
                     value={imgUrl}
                     onChange={e => setImgUrl(e.target.value)}
                 />
-                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Create Blog</button>
+                <button type="submit" className="bg-blue-600 m-4 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Create Blog</button>
             </form>
         </div>
     );

@@ -6,6 +6,7 @@ import { getBlogs } from "./resolvers/blog";
 import { getBlogById } from "./resolvers/blog";
 // import { getBlogById } from "./resolvers/blog";
 import { prisma } from "../../../../prisma/client";
+import { create } from "domain";
 
 const typeDefs = gql`
   type Query {
@@ -16,7 +17,7 @@ const typeDefs = gql`
     BlogArr(q: String): [Blog] #for multiple filter add more using comma (q:String,ms:number")
   }
   type Mutation {
-    createBlog(title: String!, content: String!, imgUrl: String!): Boolean!
+    createBlog(title: String!, content: String!, imgUrl: String!): Blog!
   }
   type Blog {
     id: String
@@ -42,12 +43,13 @@ const resolvers = {
         imgUrl: args.imgUrl,
       };
       try {
-        await prisma.blog.create({
+        const blog = await prisma.blog.create({
           data: blogDataSave,
         });
-        return true;
+        console.log(blog)
+        return blog;
       } catch (error) {
-        return false;
+        console.log(error)
       }
     },
   },
